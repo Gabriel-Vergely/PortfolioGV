@@ -9,12 +9,11 @@ const navItems = [
   { label: "Ls", href: "/#ctf-preview" },
 ];
 
-export default function Navbar({ isDark, setIsDark }) {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const logoLight = "/gvlogo.png"; // logo día
-  const logoDark = "/logo_night.png"; // logo noche
 
   const handleScroll = (hash) => {
     setIsOpen(false);
@@ -28,19 +27,17 @@ export default function Navbar({ isDark, setIsDark }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 shadow-md font-montserrat transition-colors duration-300 h-10 md:h-10 flex items-center ${
-        isDark ? "bg-black" : "bg-blue-950"
-      }`}
+      className="fixed top-0 left-0 w-full z-50 shadow-md font-montserrat transition-colors duration-300 h-12 md:h-14 flex items-center bg-blue-950"
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 w-full flex items-center justify-between">
+      <div className="w-full px-6 md:px-24 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/#top"
           onClick={() => handleScroll("#top")}
-          className="flex items-center -ml-2 md:-ml-1.5" // siempre margen de día
+          className="flex items-center" // alineado con el texto del hero
         >
           <img
-            src={isDark ? logoDark : logoLight}
+            src={logoLight}
             alt="Logo"
             className="h-10 md:h-14 w-auto"
           />
@@ -53,9 +50,7 @@ export default function Navbar({ isDark, setIsDark }) {
             <li key={label}>
               <Link
                 to={href}
-                className={`text-white transition-colors duration-300 ${
-                  isDark ? "hover:text-red-600" : "hover:text-sky-600"
-                }`}
+                className="text-white transition-colors duration-300 hover:text-sky-600"
                 onClick={() =>
                   handleScroll(href.includes("#") ? "#" + href.split("#")[1] : null)
                 }
@@ -64,14 +59,6 @@ export default function Navbar({ isDark, setIsDark }) {
               </Link>
             </li>
           ))}
-          <li>
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="text-white text-xl bg-transparent border-none p-0 m-0 focus:outline-none ml-4"
-            >
-              {isDark ? "☀️" : "🌙"}
-            </button>
-          </li>
         </ul>
 
         {/* Botón menú móvil */}
@@ -92,9 +79,7 @@ export default function Navbar({ isDark, setIsDark }) {
       {/* Menú móvil */}
       {isOpen && (
         <div
-          className={`md:hidden fixed top-12 left-0 w-full h-[calc(100%-3rem)] backdrop-blur-sm z-40 flex flex-col items-center justify-start py-6 space-y-6 transition-all duration-300 ${
-            isDark ? "bg-black/95 text-red-400" : "bg-white text-blue-950"
-          }`}
+          className="md:hidden fixed top-12 left-0 w-full h-[calc(100%-3rem)] backdrop-blur-sm z-40 flex flex-col items-center justify-start py-6 space-y-6 transition-all duration-300 bg-white text-blue-950"
         >
           {navItems.map(({ label, href }) => (
             <Link
@@ -108,12 +93,6 @@ export default function Navbar({ isDark, setIsDark }) {
               {label}
             </Link>
           ))}
-          <button
-            onClick={() => setIsDark(!isDark)}
-            className="text-2xl mt-4 bg-transparent border-none focus:outline-none"
-          >
-            {isDark ? "☀️" : "🌙"}
-          </button>
         </div>
       )}
     </nav>

@@ -1,7 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 
-export default function ExperienceEstudies({ isDark }) {
+export default function ExperienceEstudies() {
   const initialExperiences = [
+    {
+      year: "Working",
+      title: "AI Security Engineer Junior",
+      company: "BCNSoluciona",
+      details: [
+        "Creation of AI systems",
+        "Security of AI",
+        "AI governance",
+        "Automations",
+      ],
+    },
     {
       year: "Studying",
       title: "Computer engineering",
@@ -72,38 +83,41 @@ export default function ExperienceEstudies({ isDark }) {
 
   const [showMore, setShowMore] = useState(false);
   const [isExpanding, setIsExpanding] = useState(false);
+  const [isCollapsing, setIsCollapsing] = useState(false);
   const containerRef = useRef(null);
-  const lineRef = useRef(null);
+  const collapsedHeightRef = useRef(0);
   const [containerHeight, setContainerHeight] = useState(0);
 
-  const visibleExperiences = showMore
-    ? initialExperiences
-    : initialExperiences.slice(0, 2);
+  // Mientras colapsa, los ítems extra siguen montados para poder ocultarlos animadamente
+  const visibleExperiences =
+    showMore || isCollapsing
+      ? initialExperiences
+      : initialExperiences.slice(0, 2);
 
   useEffect(() => {
+    // Durante el colapso la altura objetivo ya se fijó en handleToggle; no re-medir
+    if (isCollapsing) return;
     if (containerRef.current) {
-      setContainerHeight(containerRef.current.scrollHeight);
+      const height = containerRef.current.scrollHeight;
+      setContainerHeight(height);
+      if (!showMore) {
+        collapsedHeightRef.current = height;
+      }
     }
-  }, [showMore, visibleExperiences]);
+  }, [showMore, isCollapsing]);
 
   const handleToggle = () => {
     if (!showMore) {
-      // Show More: animado
+      // Show More: animado (cancela un colapso en curso si lo hay)
+      setIsCollapsing(false);
       setIsExpanding(true);
       setShowMore(true);
     } else {
-      // Show Less: sin animación
+      // Show Less: misma animación a la inversa, hacia la altura colapsada
       setIsExpanding(false);
+      setIsCollapsing(true);
       setShowMore(false);
-      if (lineRef.current && containerRef.current) {
-        // Quitar transición temporalmente para reducción instantánea
-        lineRef.current.style.transition = "none";
-        lineRef.current.style.height = containerRef.current.scrollHeight + "px";
-        // Forzar reflow para aplicar cambios
-        void lineRef.current.offsetHeight;
-        // Restaurar transición para la próxima expansión
-        lineRef.current.style.transition = "";
-      }
+      setContainerHeight(collapsedHeightRef.current);
     }
   };
 
@@ -115,15 +129,11 @@ export default function ExperienceEstudies({ isDark }) {
   return (
     <section
       id="experience"
-      className={`w-full py-20 font-roboto transition-colors duration-500 ${
-        isDark ? "bg-black text-white" : "bg-white text-gray-900"
-      }`}
+      className="w-full py-20 font-roboto transition-colors duration-500 bg-white text-gray-900"
     >
       <div className="max-w-5xl mx-auto px-8">
         <h2
-          className={`text-6xl font-extrabold tracking-tight leading-tight mb-12 ml-15 ${
-            isDark ? "text-white" : "text-gray-900"
-          }`}
+          className="text-6xl font-extrabold tracking-tight leading-tight mb-12 ml-15 text-gray-900"
           style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1.1 }}
         >
           My Timeline
@@ -133,10 +143,11 @@ export default function ExperienceEstudies({ isDark }) {
         <div className="hidden md:block relative mt-20">
           {/* Línea troncal */}
           <div
-            ref={lineRef}
             className={`absolute top-0 left-1/2 transform -translate-x-1/2 border-l-4 ${
-              isExpanding ? "transition-all duration-1000 ease-in-out" : ""
-            } ${isDark ? "border-white" : "border-black"}`}
+              isExpanding || isCollapsing
+                ? "transition-all duration-1000 ease-in-out"
+                : ""
+            } border-black`}
             style={{ height: containerHeight }}
           ></div>
 
@@ -144,9 +155,17 @@ export default function ExperienceEstudies({ isDark }) {
           <div
             ref={containerRef}
             className={`relative overflow-hidden ${
-              isExpanding ? "transition-all duration-1000 ease-in-out" : ""
+              isExpanding || isCollapsing
+                ? "transition-all duration-1000 ease-in-out"
+                : ""
             }`}
             style={{ maxHeight: containerHeight }}
+            onTransitionEnd={(e) => {
+              // Al terminar de encoger, desmontar los ítems ya ocultos
+              if (e.target === e.currentTarget && isCollapsing) {
+                setIsCollapsing(false);
+              }
+            }}
           >
             {visibleExperiences.map((exp, index) => {
               const isLeft = index % 2 === 0;
@@ -170,39 +189,23 @@ export default function ExperienceEstudies({ isDark }) {
                     <div
                       className={`absolute top-6 ${
                         isLeft ? "right-[-16px]" : "left-[-16px]"
-                      } w-8 h-8 ${
-                        isDark
-                          ? "bg-red-500 border-gray-900"
-                          : "bg-black border-white"
-                      } border-4 rounded-full shadow-md z-10`}
+                      } w-8 h-8 bg-black border-white border-4 rounded-full shadow-md z-10`}
                     ></div>
 
                     <p
-                      className={`font-semibold mb-1 ${
-                        isDark ? "text-red-400" : "text-sky-600"
-                      } ${isLeft ? "text-right" : "text-left"}`}
+                      className={`font-semibold mb-1 text-sky-600 ${
+                        isLeft ? "text-right" : "text-left"
+                      }`}
                     >
                       {exp.year}
                     </p>
-                    <h3
-                      className={`text-2xl font-bold ${
-                        isDark ? "text-red-500" : "text-black"
-                      }`}
-                    >
+                    <h3 className="text-2xl font-bold text-black">
                       {exp.title}
                     </h3>
-                    <p
-                      className={`font-semibold mb-2 ${
-                        isDark ? "text-red-400" : "text-sky-600"
-                      }`}
-                    >
+                    <p className="font-semibold mb-2 text-sky-600">
                       {exp.company}
                     </p>
-                    <ul
-                      className={`list-disc list-inside mb-6 ${
-                        isDark ? "text-white" : "text-gray-900"
-                      }`}
-                    >
+                    <ul className="list-disc list-inside mb-6 text-gray-900">
                       {exp.details.map((d, i) => (
                         <li key={i}>{d}</li>
                       ))}
@@ -213,39 +216,23 @@ export default function ExperienceEstudies({ isDark }) {
                     certificationsBetween[index] && (
                       <div className="relative my-12 mb-40">
                         <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-                          <div
-                            className={`w-6 h-6 border-4 rounded-full shadow-sm ${
-                              isDark
-                                ? "bg-black border-red-500"
-                                : "bg-white border-blue-900"
-                            }`}
-                          ></div>
+                          <div className="w-6 h-6 border-4 rounded-full shadow-sm bg-white border-blue-900"></div>
                         </div>
                         {/* Certificaciones */}
                         {isLeft ? (
                           <div className="relative mt-[-10px]">
                             <div
-                              className={`absolute left-1/2 top-3 h-0.5 ${
-                                isDark ? "bg-red-500" : "bg-blue-900"
-                              }`}
+                              className="absolute left-1/2 top-3 h-0.5 bg-blue-900"
                               style={{ width: "calc(50% - 150px)" }}
                             ></div>
                             <div
-                              className={`absolute top-[-10px] left-[600px] transform translate-x-[calc(50%-150px)] px-3 py-1 rounded shadow-md ${
-                                isDark
-                                  ? "bg-black text-red-400"
-                                  : "bg-white text-gray-800"
-                              }`}
+                              className="absolute top-[-10px] left-[600px] transform translate-x-[calc(50%-150px)] px-3 py-1 rounded shadow-md bg-white text-gray-800"
                               style={{ marginLeft: "calc(50% - 150px)" }}
                             >
                               <p className="text-sm font-semibold">
                                 {certificationsBetween[index].name}
                               </p>
-                              <p
-                                className={`text-xs ${
-                                  isDark ? "text-red-300" : "text-gray-500"
-                                }`}
-                              >
+                              <p className="text-xs text-gray-500">
                                 {certificationsBetween[index].year}
                               </p>
                             </div>
@@ -253,27 +240,17 @@ export default function ExperienceEstudies({ isDark }) {
                         ) : (
                           <div className="relative mt-[-10px]">
                             <div
-                              className={`absolute right-1/2 top-3 h-0.5 ${
-                                isDark ? "bg-red-500" : "bg-blue-900"
-                              }`}
+                              className="absolute right-1/2 top-3 h-0.5 bg-blue-900"
                               style={{ width: "calc(50% - 150px)" }}
                             ></div>
                             <div
-                              className={`absolute top-[-10px] right-[600px] transform -translate-x-[calc(50%-150px)] px-3 py-1 rounded shadow-md text-right ${
-                                isDark
-                                  ? "bg-black text-red-400"
-                                  : "bg-white text-gray-800"
-                              }`}
+                              className="absolute top-[-10px] right-[600px] transform -translate-x-[calc(50%-150px)] px-3 py-1 rounded shadow-md text-right bg-white text-gray-800"
                               style={{ marginRight: "calc(50% - 150px)" }}
                             >
                               <p className="text-sm font-semibold">
                                 {certificationsBetween[index].name}
                               </p>
-                              <p
-                                className={`text-xs ${
-                                  isDark ? "text-red-300" : "text-gray-500"
-                                }`}
-                              >
+                              <p className="text-xs text-gray-500">
                                 {certificationsBetween[index].year}
                               </p>
                             </div>
@@ -289,11 +266,7 @@ export default function ExperienceEstudies({ isDark }) {
           <div className="flex justify-center mt-12 relative z-20">
             <button
               onClick={handleToggle}
-              className={`font-semibold underline focus:outline-none ${
-                isDark
-                  ? "text-red-400 hover:text-red-600"
-                  : "text-sky-600 hover:text-blue-900"
-              }`}
+              className="font-semibold underline focus:outline-none text-sky-600 hover:text-blue-900"
             >
               {showMore ? "Show less..." : "Show more..."}
             </button>
@@ -305,35 +278,15 @@ export default function ExperienceEstudies({ isDark }) {
           {timelineMobile.map((item, i) =>
             item.type === "exp" ? (
               <div key={i} className="relative pl-4">
-                <p
-                  className={`font-semibold mb-1 ${
-                    isDark ? "text-red-400" : "text-sky-600"
-                  }`}
-                >
-                  {item.year}
-                </p>
-                <h3
-                  className={`text-xl font-bold ${
-                    isDark ? "text-red-500" : "text-black"
-                  }`}
-                >
-                  {item.title}
-                </h3>
+                <p className="font-semibold mb-1 text-sky-600">{item.year}</p>
+                <h3 className="text-xl font-bold text-black">{item.title}</h3>
                 {item.company && (
-                  <p
-                    className={`font-semibold mb-2 ${
-                      isDark ? "text-red-400" : "text-sky-600"
-                    }`}
-                  >
+                  <p className="font-semibold mb-2 text-sky-600">
                     {item.company}
                   </p>
                 )}
                 {item.details && (
-                  <ul
-                    className={`list-disc list-inside ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
-                  >
+                  <ul className="list-disc list-inside text-gray-900">
                     {item.details.map((d, j) => (
                       <li key={j}>{d}</li>
                     ))}
@@ -342,18 +295,8 @@ export default function ExperienceEstudies({ isDark }) {
               </div>
             ) : (
               <div key={i} className="relative pl-4">
-                <p
-                  className={`font-semibold mb-1 ${
-                    isDark ? "text-red-400" : "text-sky-600"
-                  }`}
-                >
-                  {item.year}
-                </p>
-                <h3
-                  className={`text-lg font-semibold italic ${
-                    isDark ? "text-red-500" : "text-blue-900"
-                  }`}
-                >
+                <p className="font-semibold mb-1 text-sky-600">{item.year}</p>
+                <h3 className="text-lg font-semibold italic text-blue-900">
                   {item.name}
                 </h3>
               </div>

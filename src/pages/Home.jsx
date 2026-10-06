@@ -6,16 +6,16 @@ import CTFPreview from "../components/CTFPreview";
 import Projects from "../sections/Projects";
 import Pwn from "../sections/Pwn";
 
-export default function Home({ isDark }) {
+export default function Home() {
   return (
     <div>
-      <Header isDark={isDark} />
+      <Header />
       <main>
-        <WhoAmI isDark={isDark} />
-        <ExperienceEstudies isDark={isDark} />
-        <Pwn isDark={isDark} />
-        <Projects isDark={isDark} />
-        <CTFPreview isDark={isDark} />
+        <WhoAmI />
+        <ExperienceEstudies />
+        <Pwn />
+        <Projects />
+        <CTFPreview />
       </main>
     </div>
   );

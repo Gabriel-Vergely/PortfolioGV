@@ -4,8 +4,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { projects } from "../data/projectsDetails";
+import WorkInProgress from "../components/WorkInProgress";
 
-export default function ProjectDetails({ isDark = false }) {
+export default function ProjectDetails() {
   const { id } = useParams();
   const project = projects[id];
 
@@ -40,21 +41,21 @@ export default function ProjectDetails({ isDark = false }) {
     h1: ({ node, ...props }) => (
       <h1
         {...props}
-        className={`text-3xl font-extrabold mt-2 mb-4 ${isDark ? "text-white" : "text-gray-900"}`}
+        className={`text-3xl font-extrabold mt-2 mb-4 text-gray-900`}
       />
     ),
     h2: ({ node, ...props }) => (
       <h2
         {...props}
-        className={`text-2xl font-bold mt-4 mb-2 ${isDark ? "text-white" : "text-gray-900"}`}
+        className={`text-2xl font-bold mt-4 mb-2 text-gray-900`}
       />
     ),
     h3: ({ node, ...props }) => (
-      <h3 {...props} className={`text-xl font-semibold mt-3 mb-2 ${isDark ? "text-white" : "text-gray-900"}`} />
+      <h3 {...props} className={`text-xl font-semibold mt-3 mb-2 text-gray-900`} />
     ),
     p: ({ node, ...props }) => <p {...props} className="leading-7 my-2" />,
-    ul: ({ node, ...props }) => <ul {...props} className={`list-disc ml-6 my-2 ${isDark ? "text-gray-200" : "text-gray-800"}`} />,
-    ol: ({ node, ...props }) => <ol {...props} className={`list-decimal ml-6 my-2 ${isDark ? "text-gray-200" : "text-gray-800"}`} />,
+    ul: ({ node, ...props }) => <ul {...props} className={`list-disc ml-6 my-2 text-gray-800`} />,
+    ol: ({ node, ...props }) => <ol {...props} className={`list-decimal ml-6 my-2 text-gray-800`} />,
     li: ({ node, ...props }) => <li {...props} className="my-1" />,
     blockquote: ({ node, ...props }) => <blockquote {...props} className="border-l-4 pl-4 italic my-2" />,
     code: ({ inline, className, children, ...props }) => {
@@ -62,7 +63,7 @@ export default function ProjectDetails({ isDark = false }) {
         return (
           <code
             {...props}
-            className={`rounded px-1 py-0.5 text-sm ${isDark ? "bg-neutral-800" : "bg-gray-100"}`}
+            className="rounded px-1 py-0.5 text-sm bg-gray-100"
           >
             {children}
           </code>
@@ -70,7 +71,7 @@ export default function ProjectDetails({ isDark = false }) {
       }
       // block code
       return (
-        <pre className={`rounded overflow-x-auto p-3 my-3 ${isDark ? "bg-black/60 text-white" : "bg-gray-900/5 text-gray-900"}`}>
+        <pre className="rounded overflow-x-auto p-3 my-3 bg-gray-900/5 text-gray-900">
           <code className={className} {...props}>
             {children}
           </code>
@@ -103,17 +104,17 @@ export default function ProjectDetails({ isDark = false }) {
   // ------------------------------------------------------------------
   return (
     <section
-      className={`min-h-screen py-20 px-8 font-roboto transition-colors duration-500 ${
-        isDark ? "bg-black text-white" : "bg-white text-gray-900"
-      }`}
+      className="min-h-screen py-20 px-8 font-roboto transition-colors duration-500 bg-white text-gray-900"
     >
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-6">{project.title}</h1>
 
+        {project.wip && <WorkInProgress />}
+
         {/* Nota: he dejado 'prose' en caso de que quieras mantenerlo; si sospechas que 'prose' es el problema, cámbialo a 'max-w-none' */}
         <article
           ref={articleRef}
-          className={`prose prose-lg max-w-none space-y-4 ${isDark ? "prose-invert" : ""}`}
+          className="prose prose-lg max-w-none space-y-4"
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={mdComponents}>
             {project.content}
@@ -123,7 +124,7 @@ export default function ProjectDetails({ isDark = false }) {
         <div className="mt-10">
           <Link
             to="/#projects"
-            className={`font-semibold underline ${isDark ? "text-red-400 hover:text-red-600" : "text-blue-600 hover:text-blue-900"}`}
+            className="font-semibold underline text-blue-600 hover:text-blue-900"
           >
             ← Back to Projects
           </Link>

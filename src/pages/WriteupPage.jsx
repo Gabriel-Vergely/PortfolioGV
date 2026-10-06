@@ -1,11 +1,11 @@
 import { useParams, Link } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { writeups } from "../data/writeups";
 
-export default function WriteupPage({ isDark = false }) {
+export default function WriteupPage() {
   const { id } = useParams();
   const writeup = writeups[id];
 
@@ -14,7 +14,7 @@ export default function WriteupPage({ isDark = false }) {
       <div className="p-8 text-center">
         <h1 className="text-2xl font-bold">Writeup not found</h1>
         <Link to="/ctf" className="text-blue-600 underline">
-          ← Back to CTF Finder
+          ← Back to Writeups Finder
         </Link>
       </div>
     );
@@ -31,16 +31,16 @@ export default function WriteupPage({ isDark = false }) {
       </div>
     ),
     h1: ({ node, ...props }) => (
-      <h1 {...props} className={`text-3xl font-extrabold mt-6 mb-4 ${isDark ? "text-white" : "text-gray-900"}`} />
+      <h1 {...props} className={`text-3xl font-extrabold mt-6 mb-4 text-gray-900`} />
     ),
     h2: ({ node, ...props }) => (
-      <h2 {...props} className={`text-2xl font-bold mt-5 mb-3 ${isDark ? "text-white" : "text-gray-900"}`} />
+      <h2 {...props} className={`text-2xl font-bold mt-5 mb-3 text-gray-900`} />
     ),
     h3: ({ node, ...props }) => (
-      <h3 {...props} className={`text-xl font-semibold mt-4 mb-2 ${isDark ? "text-white" : "text-gray-900"}`} />
+      <h3 {...props} className={`text-xl font-semibold mt-4 mb-2 text-gray-900`} />
     ),
     h4: ({ node, ...props }) => (
-      <h4 {...props} className={`text-lg font-semibold mt-3 mb-2 ${isDark ? "text-white" : "text-gray-900"}`} />
+      <h4 {...props} className={`text-lg font-semibold mt-3 mb-2 text-gray-900`} />
     ),
     p: ({ node, ...props }) => <p {...props} className="leading-7 my-2" />,
     strong: ({ node, ...props }) => <strong {...props} className="font-bold" />,
@@ -49,10 +49,10 @@ export default function WriteupPage({ isDark = false }) {
       <blockquote {...props} className="border-l-4 pl-4 italic my-4 opacity-80" />
     ),
     ul: ({ node, ...props }) => (
-      <ul {...props} className={`list-disc ml-6 my-2 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
+      <ul {...props} className={`list-disc ml-6 my-2 text-gray-800`} />
     ),
     ol: ({ node, ...props }) => (
-      <ol {...props} className={`list-decimal ml-6 my-2 ${isDark ? "text-gray-200" : "text-gray-800"}`} />
+      <ol {...props} className={`list-decimal ml-6 my-2 text-gray-800`} />
     ),
     li: ({ checked, ...props }) => {
       // Para listas de tareas (GFM)
@@ -69,9 +69,7 @@ export default function WriteupPage({ isDark = false }) {
     a: ({ node, ...props }) => (
       <a
         {...props}
-        className={`underline font-medium ${
-          isDark ? "text-blue-400 hover:text-blue-200" : "text-blue-600 hover:text-blue-800"
-        }`}
+        className="underline font-medium text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"
       />
@@ -79,7 +77,7 @@ export default function WriteupPage({ isDark = false }) {
     img: ({ node, ...props }) => (
       <img {...props} loading="lazy" className="rounded-lg my-4 shadow-md max-w-full h-auto" alt={props.alt || ""} />
     ),
-    hr: () => <hr className="my-6 border-t border-gray-300 dark:border-gray-700" />,
+    hr: () => <hr className="my-6 border-t border-gray-300" />,
     table: ({ node, ...props }) => (
       <div className="overflow-x-auto my-4">
         <table {...props} className="table-auto border-collapse w-full text-sm">
@@ -88,14 +86,14 @@ export default function WriteupPage({ isDark = false }) {
       </div>
     ),
     thead: ({ node, ...props }) => (
-      <thead {...props} className="bg-gray-100 dark:bg-neutral-800 font-semibold" />
+      <thead {...props} className="font-semibold text-white bg-blue-700" />
     ),
     tbody: ({ node, ...props }) => <tbody {...props} />,
     tr: ({ node, ...props }) => (
-      <tr {...props} className="border-b border-gray-300 dark:border-gray-700 last:border-0" />
+      <tr {...props} className="border-b last:border-0 border-gray-200" />
     ),
     th: ({ node, ...props }) => (
-      <th {...props} className="px-3 py-2 text-left font-semibold" />
+      <th {...props} className="px-3 py-2 text-left font-semibold text-white" />
     ),
     td: ({ node, ...props }) => (
       <td {...props} className="px-3 py-2 align-top" />
@@ -105,9 +103,7 @@ export default function WriteupPage({ isDark = false }) {
         return (
           <code
             {...props}
-            className={`rounded px-1 py-0.5 text-sm font-mono ${
-              isDark ? "bg-neutral-800 text-gray-100" : "bg-gray-100 text-gray-900"
-            }`}
+            className="rounded px-1 py-0.5 text-sm font-mono bg-gray-100 text-gray-900"
           >
             {children}
           </code>
@@ -115,9 +111,7 @@ export default function WriteupPage({ isDark = false }) {
       }
       return (
         <pre
-          className={`rounded overflow-x-auto p-3 my-3 text-sm font-mono ${
-            isDark ? "bg-black/60 text-gray-100" : "bg-gray-900/5 text-gray-900"
-          }`}
+          className="rounded overflow-x-auto p-3 my-3 text-sm font-mono bg-gray-900/5 text-gray-900"
         >
           <code className={className} {...props}>
             {children}
@@ -127,35 +121,43 @@ export default function WriteupPage({ isDark = false }) {
     },
   };
 
-  // --- Debug opcional: ver qué tags se están generando ---
-  const articleRef = useRef(null);
-  const [tagSummary, setTagSummary] = useState([]);
-
-  useEffect(() => {
-    const el = articleRef.current;
-    if (!el) return;
-    const counts = {};
-    el.querySelectorAll("*").forEach((node) => {
-      const tag = node.tagName.toLowerCase();
-      counts[tag] = (counts[tag] || 0) + 1;
-    });
-    setTagSummary(Object.entries(counts));
-  }, [writeup.content]);
-
   return (
     <section
-      className={`min-h-screen py-20 px-8 font-roboto transition-colors duration-500 ${
-        isDark ? "bg-black text-white" : "bg-white text-gray-900"
-      }`}
+      className="min-h-screen py-20 px-8 font-roboto transition-colors duration-500 bg-white text-gray-900"
     >
       <div className="max-w-4xl mx-auto">
+        {/* Breadcrumb trail (Ls › Writeups Finder › current writeup), sticky under the navbar */}
+        <nav
+          aria-label="Breadcrumb"
+          className="sticky top-12 md:top-14 z-30 -mx-8 px-8 py-3 mb-6 bg-white/90 backdrop-blur border-b border-gray-200"
+        >
+          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
+            <li>
+              <Link to="/#ctf-preview" className="font-medium text-gray-600 transition-colors duration-300 hover:text-sky-600">
+                Ls
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-gray-400">›</li>
+            <li>
+              <Link to="/ctf" className="font-medium text-gray-600 transition-colors duration-300 hover:text-sky-600">
+                Writeups Finder
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-gray-400">›</li>
+            <li
+              aria-current="page"
+              title={writeup.title}
+              className="font-semibold text-gray-700 truncate max-w-[55vw] sm:max-w-md"
+            >
+              {writeup.title}
+            </li>
+          </ol>
+        </nav>
+
         <h1 className="text-4xl font-extrabold mb-6">{writeup.title}</h1>
 
         <article
-          ref={articleRef}
-          className={`prose prose-lg max-w-none space-y-4 ${
-            isDark ? "prose-invert" : ""
-          }`}
+          className="prose prose-lg max-w-none space-y-4"
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={mdComponents}>
             {writeup.content}
@@ -165,29 +167,11 @@ export default function WriteupPage({ isDark = false }) {
         <div className="mt-10">
           <Link
             to="/ctf"
-            className={`font-semibold underline ${
-              isDark
-                ? "text-red-400 hover:text-red-600"
-                : "text-blue-600 hover:text-blue-900"
-            }`}
+            className="font-semibold underline text-blue-600 hover:text-blue-900"
           >
-            ← Back to CTF Finder
+            ← Back to Writeups Finder
           </Link>
         </div>
-
-        {/* Debug opcional */}
-        <details className="mt-6">
-          <summary className="cursor-pointer">Debug: etiquetas renderizadas</summary>
-          <ul className="mt-3 space-y-1 text-sm">
-            {tagSummary.map(([t, n], i) => (
-              <li key={i}>
-                <code>
-                  {t}: {n}
-                </code>
-              </li>
-            ))}
-          </ul>
-        </details>
       </div>
     </section>
   );

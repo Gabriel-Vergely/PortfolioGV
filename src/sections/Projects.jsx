@@ -1,136 +1,100 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Projects({ isDark }) {
+export default function Projects() {
   const projects = [
     {
-      id: "QuantumDrive",
-      title: "QuantumDrive",
+      id: "acrypts",
+      title: "ACRYPTS",
       description:
-        "QuantumDrive cloud storage platform everything is managed from a web app where users are notified of file changes secured by client-side quantum encryption...",
+        "Cryptography inventory and compliance tool. It produces a cryptographic CBOM (Cryptography Bill of Materials) and a CAL (Crypto Agility Layer) to make cryptographic migrations easier...",
       timeframe: "2026",
       icon: (
-        <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
-          <ellipse cx="32" cy="32" rx="20" ry="10" stroke="currentColor" strokeWidth="3"/>
-          <ellipse cx="32" cy="32" rx="10" ry="20" stroke="currentColor" strokeWidth="3"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2l8 3v6c0 5-3.5 8-8 11-4.5-3-8-6-8-11V5l8-3z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+          <circle cx="12" cy="11" r="2" stroke="currentColor" strokeWidth="2"/>
+          <path d="M12 13v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       ),
     },
     {
-      id: "Fourpwn",
-      title: "4Pwn",
+      id: "flowos",
+      title: "FlowOS",
       description:
-        "Pentest as a service platform everything is managed from a web application where the customer is notified of vulnerabilities found by their assigned technician in real time...",
-      timeframe: "2025",
+        "Web platform to build automations with an embedded n8n engine and several AI models, speeding up both the creation and the compliance of workflows...",
+      timeframe: "2026",
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <circle cx="5" cy="6" r="2.5" stroke="currentColor" strokeWidth="2"/>
+          <circle cx="5" cy="18" r="2.5" stroke="currentColor" strokeWidth="2"/>
+          <circle cx="19" cy="12" r="2.5" stroke="currentColor" strokeWidth="2"/>
+          <path d="M7.5 6.9l9 4.1M7.5 17.1l9-4.1" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       ),
     },
     {
       id: "threatlog",
-      title: "ThreatLog",
+      title: "ThreatLog AI",
       description:
         "Real-time log analyzer (network, system) to detect threats. Different models (RandomForest, DecisionTree) have been trained to detect malicious logs...",
       timeframe: "2025",
       icon: (
-        <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
-          <circle cx="26" cy="26" r="12" stroke="currentColor" strokeWidth="3"/>
-          <line x1="36" y1="36" x2="50" y2="50" stroke="currentColor" strokeWidth="3"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <circle cx="10" cy="10" r="6" stroke="currentColor" strokeWidth="2"/>
+          <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       ),
     },
   ];
 
-  const [expandedIndexes, setExpandedIndexes] = useState([]);
-
-  const toggleExpand = (index) => {
-    setExpandedIndexes((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
-    );
-  };
-
   return (
     <section
       id="projects"
-      className={`w-full py-20 font-roboto transition-colors duration-500 ${
-        isDark ? "bg-black text-white" : "bg-gray-50 text-gray-900"
-      }`}
+      className="w-full py-20 font-roboto transition-colors duration-500 bg-gray-50 text-gray-900"
     >
-      <div className="max-w-4xl mx-auto px-8">
+      <div className="max-w-5xl mx-auto px-8">
         {/* Título */}
         <div className="flex items-center">
           <h2
-            className={`text-5xl font-extrabold tracking-tight transition-colors duration-500 ${
-              isDark ? "text-white" : "text-gray-900"
-            }`}
+            className="text-5xl font-extrabold tracking-tight transition-colors duration-500 text-gray-900"
             style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1.1 }}
           >
             Projects
           </h2>
         </div>
 
-        {/* Lista de Proyectos */}
-        <ul
-          className={`relative mt-15 ml-6 space-y-16 border-l-2 ${
-            isDark ? "border-gray-700" : "border-gray-300"
-          }`}
-        >
-          {projects.map(({ id, title, description, timeframe, icon }, idx) => {
-            return (
-              <li key={idx} className="relative">
-                {/* Marker */}
-                <span
-                  className={`absolute -left-5 top-2 flex items-center justify-center w-10 h-10 rounded-full shadow-md ${
-                    isDark ? "bg-gray-200 text-red-500" : "bg-black text-white"
-                  }`}
-                >
+        {/* Rejilla de proyectos */}
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map(({ id, title, description, timeframe, icon }, idx) => (
+            <article
+              key={idx}
+              className="group flex flex-col rounded-2xl border border-gray-200 bg-white/70 backdrop-blur-sm p-6 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-sky-300"
+            >
+              <div className="flex items-center justify-between mb-5">
+                <span className="flex items-center justify-center w-12 h-12 rounded-xl shadow-md bg-black text-white transition-transform duration-300 group-hover:scale-105">
                   {icon}
                 </span>
+                <span className="text-sm font-semibold text-sky-600">
+                  {timeframe}
+                </span>
+              </div>
 
-                {/* Contenido */}
-                <div className="pl-8 max-w-xl">
-                  <p
-                    className={`text-sm font-semibold mb-1 ${
-                      isDark ? "text-red-500" : "text-sky-600"
-                    }`}
-                  >
-                    {timeframe}
-                  </p>
-                  <h3
-                    className={`text-2xl font-bold mb-3 ${
-                      isDark ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    {title}
-                  </h3>
-                  <p
-                    className={`leading-relaxed mb-2 ${
-                      isDark ? "text-gray-200" : "text-gray-700"
-                    }`}
-                  >
-                    {description.length > 100
-                      ? description.slice(0, 100) + "..."
-                      : description}
-                  </p>
-                  <Link
-                    to={`/projects/${id}`} // Redirige a la página de detalle del proyecto
-                    className={`font-semibold underline focus:outline-none transition-colors duration-300 ${
-                      isDark
-                        ? "text-red-500 hover:text-red-600"
-                        : "text-sky-600 hover:text-blue-900"
-                    }`}
-                  >
-                    Show more...
-                  </Link>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">{title}</h3>
+
+              <p className="leading-relaxed text-sm text-gray-700 flex-1">
+                {description.length > 120
+                  ? description.slice(0, 120) + "..."
+                  : description}
+              </p>
+
+              <Link
+                to={`/projects/${id}`}
+                className="mt-5 inline-flex items-center gap-1 font-semibold focus:outline-none transition-colors duration-300 text-sky-600 hover:text-blue-900"
+              >
+                Show more <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
